@@ -3,7 +3,6 @@ from playwright.sync_api import sync_playwright
 from pyjavaproperties import Properties
 import os
 import allure
-
 class BaseTest:
 
     @pytest.fixture(autouse=True)
@@ -82,9 +81,16 @@ class BaseTest:
 
 
     @pytest.fixture(autouse=True)
-    def post_condition(self):
+    def post_condition(self,request):
         yield
         print("\npost condition")
+
+        if request.node.rep_call.failed:
+            print("Test Failed Taking screenshot")
+            allure.attach(self.page.screenshot(),name=self.test_name,
+                          attachment_type=allure.attachment_type.PNG)
+        else:
+            print("No Screenshot")
 
         print("close the page")
         self.page.close()
@@ -94,12 +100,12 @@ class BaseTest:
             video_file = f"{self.video_path}{self.test_name}.webm"
             self.page.video.save_as(video_file)
             self.page.video.delete()
-            allure.attach.file(
-                video_file,
-                name=f"{self.test_name}_video",
-                attachment_type=allure.attachment_type.WEBM,
-                extension="webm",
-            )
+
+            print("attaching video to allure")
+            allure.attach.file(video_file,name=self.test_name,
+                               attachment_type=allure.attachment_type.WEBM,
+                               extension="webm")
+
         print("close the context")
         self.context.close()
 

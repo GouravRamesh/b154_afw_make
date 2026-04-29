@@ -1,0 +1,24 @@
+
+ pre - condition
+started executing the test: test_invalid_login
+video_path E:\1_B154_Playwright_Py\b154_afw\generics/../videos/
+read property file: E:\1_B154_Playwright_Py\b154_afw\generics/../config.properties
+start the playwright
+Executing the script on local system
+open the chromium browser
+go to the new page
+set naviation timeout to: 12000 ms
+set default timeout to 7000 ms
+enter the url: https://pos.aksharatraining.in/login
+data from xl bhanu
+data from xl bhanu123
+enter the username: bhanu
+enter the password: bhanu123
+click on go button
+Err Msg is Displayed
+
+post condition
+close the page
+close the context
+close the browser
+stop the playwright

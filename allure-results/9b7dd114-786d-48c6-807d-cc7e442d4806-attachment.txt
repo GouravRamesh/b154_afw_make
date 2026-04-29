@@ -1,0 +1,8 @@
+
+ pre - condition
+started executing the test: test_invalid_login
+video_path E:\1_B154_Playwright_Py\b154_afw\generics/../videos/
+read property file: E:\1_B154_Playwright_Py\b154_afw\generics/../config.properties
+start the playwright
+
+post condition
