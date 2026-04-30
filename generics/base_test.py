@@ -39,13 +39,13 @@ class BaseTest:
             print("Executing the script on local system")
             if browser=="chromium":
                 print("open the chromium browser")
-                self.browser=self.playwright.chromium.launch(headless=False)
+                self.browser=self.playwright.chromium.launch(headless=True)
             elif browser=="firefox":
                 print("open the firefox browser")
-                self.browser=self.playwright.firefox.launch(headless=False)
+                self.browser=self.playwright.firefox.launch(headless=True)
             else:
                 print("open the webkit(safari) browser")
-                self.browser = self.playwright.webkit.launch(headless=False)
+                self.browser = self.playwright.webkit.launch(headless=True)
 
         else:
             print("Executing the script on remote system")
