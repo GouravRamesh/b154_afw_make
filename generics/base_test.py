@@ -77,7 +77,7 @@ class BaseTest:
         self.page.set_default_timeout(float(ato))
 
         print("enter the url:",app_url)
-        self.page.goto(app_url)
+        self.page.goto(app_url, wait_until="domcontentloaded")
 
 
     @pytest.fixture(autouse=True)
@@ -85,32 +85,63 @@ class BaseTest:
         yield
         print("\npost condition")
 
-        if request.node.call.failed:
+        setup_report = getattr(request.node, 'setup', None)
+        call_report = getattr(request.node, 'call', None)
+        failed = (setup_report is not None and setup_report.failed) or \
+                 (call_report is not None and call_report.failed)
+
+        page = getattr(self, 'page', None)
+
+        if failed and page is not None:
             print("Test is Failed and Taking screenshot")
-            allure.attach(self.page.screenshot(),name=self.test_name,
-                              attachment_type=allure.attachment_type.PNG)
+            try:
+                allure.attach(page.screenshot(),name=self.test_name,
+                                  attachment_type=allure.attachment_type.PNG)
+            except Exception as e:
+                print("screenshot failed:", e)
         else:
-            print("Test is Passed and NOT Taking screenshot")
+            print("Test is Passed or no page — NOT Taking screenshot")
 
-        print("close the page")
-        self.page.close()
+        if page is not None:
+            try:
+                print("close the page")
+                page.close()
+            except Exception as e:
+                print("page close failed:", e)
 
-        if self.video.lower() == "yes":
-            print(f"saving video:{self.test_name}.webm")
-            video_file = f"{self.video_path}{self.test_name}.webm"
-            self.page.video.save_as(video_file)
-            self.page.video.delete()
+            if self.video.lower() == "yes":
+                try:
+                    print(f"saving video:{self.test_name}.webm")
+                    video_file = f"{self.video_path}{self.test_name}.webm"
+                    page.video.save_as(video_file)
+                    page.video.delete()
+                    print("attaching video to allure")
+                    allure.attach.file(video_file,name=self.test_name,
+                                       attachment_type=allure.attachment_type.WEBM,
+                                       extension="webm")
+                except Exception as e:
+                    print("video save failed:", e)
 
-            print("attaching video to allure")
-            allure.attach.file(video_file,name=self.test_name,
-                               attachment_type=allure.attachment_type.WEBM,
-                               extension="webm")
+        context = getattr(self, 'context', None)
+        if context is not None:
+            try:
+                print("close the context")
+                context.close()
+            except Exception as e:
+                print("context close failed:", e)
 
-        print("close the context")
-        self.context.close()
+        browser = getattr(self, 'browser', None)
+        if browser is not None:
+            try:
+                print("close the browser")
+                browser.close()
+            except Exception as e:
+                print("browser close failed:", e)
 
-        print("close the browser")
-        self.browser.close()
-
-        print("stop the playwright")
-        self.playwright.stop()
+        playwright = getattr(self, 'playwright', None)
+        if playwright is not None:
+            try:
+                print("stop the playwright")
+                playwright.stop()
+            except Exception as e:
+                print("playwright stop failed:", e)
