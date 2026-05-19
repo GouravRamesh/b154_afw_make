@@ -1,0 +1,27 @@
+
+ pre - condition
+started executing the test: test_valid_login
+video_path /home/runner/work/b154_afw_make/b154_afw_make/generics/../videos/
+read property file: /home/runner/work/b154_afw_make/b154_afw_make/generics/../config.properties
+start the playwright
+Executing the script on local system
+open the chromium browser
+go to the new page
+set naviation timeout to: 60000 ms
+set default timeout to 7000 ms
+enter the url: https://pos.aksharatraining.in/login
+data from xl student123
+data from xl akshara123
+enter the username: student123
+enter the password: akshara123
+click on go button
+Home Page is Displayed
+
+post condition
+Test is Passed or no page — NOT Taking screenshot
+close the page
+saving video:test_valid_login.webm
+attaching video to allure
+close the context
+close the browser
+stop the playwright
