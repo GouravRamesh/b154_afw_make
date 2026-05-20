@@ -6,4 +6,3 @@ openpyxl
 playwright
 allure-pytest
 pandas
-pydist
